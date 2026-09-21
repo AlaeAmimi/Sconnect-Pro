@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Infrastructures — SportConnect Pro</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">SportConnect <span>Pro</span></div>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/facilities">Infrastructures</a>
+            <a href="/associations">Clubs</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <h1>Infrastructures municipales</h1>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Capacité ERP</th>
+                    <th>Divisible</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% facilities.forEach(function(f) { %>
+                <tr>
+                    <form action="/facilities/<%= f.id %>/update" method="POST">
+                        <td><input type="text" name="name" value="<%= f.name %>" required></td>
+                        <td><input type="text" name="address" value="<%= f.address %>" required></td>
+                        <td><input type="number" name="erp_capacity" value="<%= f.erp_capacity %>" min="1" required></td>
+                        <td>
+                            <select name="is_divisible">
+                                <option value="true" <%= f.is_divisible ? 'selected' : '' %>>Oui</option>
+                                <option value="false" <%= !f.is_divisible ? 'selected' : '' %>>Non</option>
+                            </select>
+                        </td>
+                        <td class="actions">
+                            <button type="submit" class="btn small">Mettre à jour</button>
+                    </form>
+                            <form action="/facilities/<%= f.id %>/delete" method="POST" class="inline">
+                                <button type="submit" class="btn small danger" onclick="return confirm('Supprimer cette infrastructure ?')">Supprimer</button>
+                            </form>
+                        </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <h2>Ajouter une infrastructure</h2>
+        <form action="/facilities" method="POST" class="add-form">
+            <input type="text" name="name" placeholder="Nom" required>
+            <input type="text" name="address" placeholder="Adresse" required>
+            <input type="number" name="erp_capacity" placeholder="Capacité ERP" min="1" required>
+            <select name="is_divisible">
+                <option value="false">Non divisible</option>
+                <option value="true">Divisible</option>
+            </select>
+            <button type="submit" class="btn">Ajouter</button>
+        </form>
+    </main>
+</body>
+</html>

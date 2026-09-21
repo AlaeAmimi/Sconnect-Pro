@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Clubs partenaires — SportConnect Pro</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">SportConnect <span>Pro</span></div>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/facilities">Infrastructures</a>
+            <a href="/associations">Clubs</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <h1>Clubs partenaires</h1>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% associations.forEach(function(a) { %>
+                <tr>
+                    <form action="/associations/<%= a.id %>/update" method="POST">
+                        <td><input type="text" name="name" value="<%= a.name %>" required></td>
+                        <td><input type="email" name="contact_email" value="<%= a.contact_email %>" required></td>
+                        <td><input type="text" name="contact_phone" value="<%= a.contact_phone || '' %>"></td>
+                        <td class="actions">
+                            <button type="submit" class="btn small">Mettre à jour</button>
+                    </form>
+                            <form action="/associations/<%= a.id %>/delete" method="POST" class="inline">
+                                <button type="submit" class="btn small danger" onclick="return confirm('Supprimer ce club ?')">Supprimer</button>
+                            </form>
+                        </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <h2>Ajouter un club</h2>
+        <form action="/associations" method="POST" class="add-form">
+            <input type="text" name="name" placeholder="Nom" required>
+            <input type="email" name="contact_email" placeholder="Email" required>
+            <input type="text" name="contact_phone" placeholder="Téléphone">
+            <button type="submit" class="btn">Ajouter</button>
+        </form>
+    </main>
+</body>
+</html>
