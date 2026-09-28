@@ -1,7 +1,19 @@
 // src/controllers/memberController.js
 const pool = require('../config/db');
 const parseBody = require('../core/bodyParser');
-const render = require('../core/render');
+const ejs = require('ejs');
+const path = require('path');
+const fs = require('fs');
+const { getAgeCategory, isMedicalCertificateValid } = require('../services/eligibilityService');
+
+function render(res, viewName, data) {
+    const filepath = path.join(__dirname, "..", "..", "views", "pages", viewName);
+    const template = fs.readFileSync(filepath, "utf-8");
+    const html = ejs.render(template, data);
+
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(html);
+}
 
 function redirectToMembers(res) {
     res.writeHead(302, { Location: '/members' });
@@ -12,8 +24,14 @@ async function listMembers(req, res) {
     try {
         const membersResult = await pool.query('SELECT * FROM members ORDER BY id');
         const familiesResult = await pool.query('SELECT * FROM families ORDER BY name');
+
+        const membersWithEligibility = membersResult.rows.map(member => ({...member,
+            age_category: getAgeCategory(member.birth_date),
+            certificate_valid: isMedicalCertificateValid(member.medical_certificate_date, false)
+        }));
+
         render(res, 'members.ejs', {
-            members: membersResult.rows,
+            members: membersWithEligibility,
             families: familiesResult.rows
         });
     } catch (error) {

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Adhérents — SportConnect Pro</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">SportConnect <span>Pro</span></div>
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/facilities">Infrastructures</a>
+            <a href="/associations">Clubs</a>
+            <a href="/activities">Activités</a>
+            <a href="/members">Adhérents</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <h1>Adhérents</h1>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Famille</th>
+                    <th>Naissance</th>
+                    <th>Catégorie</th>
+                    <th>Résident</th>
+                    <th>Certificat</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% members.forEach(function(member) { %>
+                <% const family = families.find(f => f.id === member.family_id); %>
+                <tr>
+                    <td><%= member.first_name %> <%= member.last_name %></td>
+                    <td><%= family ? family.name : '—' %></td>
+                    <td><%= member.birth_date %></td>
+                    <td><%= member.age_category %></td>
+                    <td><%= member.is_resident ? 'Oui' : 'Non' %></td>
+                    <td>
+                        <% if (member.certificate_valid) { %>
+                            <span class="badge ok">Valide</span>
+                        <% } else { %>
+                            <span class="badge expired">Expiré / Manquant</span>
+                        <% } %>
+                    </td>
+                    <td class="actions">
+                        <form action="/members/<%= member.id %>/delete" method="POST" class="inline">
+                            <button type="submit" class="btn small danger" onclick="return confirm('Supprimer cet adhérent ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <h2>Ajouter un adhérent</h2>
+        <form action="/members" method="POST" class="add-form">
+            <select name="family_id" required>
+                <option value="">-- Famille --</option>
+                <% families.forEach(function(f) { %>
+                    <option value="<%= f.id %>"><%= f.name %></option>
+                <% }); %>
+            </select>
+
+            <input type="text" name="first_name" placeholder="Prénom" required>
+            <input type="text" name="last_name" placeholder="Nom" required>
+            <input type="date" name="birth_date" required>
+
+            <select name="is_resident">
+                <option value="true">Résident</option>
+                <option value="false">Non résident</option>
+            </select>
+
+            <input type="date" name="medical_certificate_date" placeholder="Date certificat médical">
+            <input type="text" name="pass_sport_code" placeholder="Code Pass'Sport (optionnel)">
+
+            <button type="submit" class="btn">Ajouter</button>
+        </form>
+    </main>
+</body>
+</html>

@@ -189,3 +189,20 @@ footer {
     border: 1px solid #cbd2d9;
     border-radius: 4px;
 }
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge.ok {
+    background-color: #d4f4dd;
+    color: #1a7f37;
+}
+
+.badge.expired {
+    background-color: #fbdadb;
+    color: #b5443b;
+}

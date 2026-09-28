@@ -4,16 +4,6 @@ const ejs = require('ejs');
 const path = require('path');
 const fs = require('fs');
 
-// function render(res, viewName, data) {
-//     ejs.renderFile(path.join(__dirname, '../../views/pages', viewName), data, (err, html) => {
-//         if (err) {
-//             res.writeHead(500);
-//             return res.end('Template error: ' + err.message);
-//         }
-//         res.writeHead(200, { 'Content-Type': 'text/html' });
-//         res.end(html);
-//     });
-// }
 
 function render(res, viewName, data) {
     const filepath = path.join(__dirname, "..", "..", "views", "pages", viewName);
