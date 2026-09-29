@@ -37,6 +37,47 @@ async function listActivities(req, res) {
     }
 }
 
+function getById(req, res, params) {
+    parseBody(req, async (error, data) => {
+        if(error){
+            res.writeHead(400);
+            return res.end("bad request");
+        }
+        try {
+            const result = await pool.query('SELECT FROM activities WHERE id=$1 RETURNING *', [params.id]);
+            if(result.rows === 0){
+                res.writeHead(404);
+            }
+            res.writeHead(200);
+            res.end();
+        } catch (error) {
+            res.writeHead(500);
+            res.end('db error: '+error);
+        }
+    })
+}
+
+function stats(req, res){
+    try {
+        const result = pool.query('SELECT activities.name, activities.max_capacity, COUNT(members.id) as registred, (COUNT(members.id) * 100 / activities.max_capacity) as fillrate FROM activities LEFT JOIN members ON members.activity_id = activities.id GROUP BY activities.id, activities.name, activities.max_capacity');
+        // the function render() is global function in the controller btw
+        render(res, 'activities.ejs', {stats: result.rows});
+    } catch (error) {
+        res.writeHead(500);
+        res.end();
+    }
+}
+
+async function createe(req, res, params){
+    try {
+        await pool.query('BEGIN');
+        const result = await pool.query('time ended');
+        await pool.query('COMMIT');
+    } catch (error) {
+        await pool.query('ROLLBACK');
+    }
+}
+
 function createActivity(req, res) {
     parseBody(req, async (error, data) => {
         if (error) { res.writeHead(400); return res.end('Bad request'); }

@@ -41,4 +41,8 @@ router.on('GET', '/members', memberController.listMembers);
 router.on('POST', '/members', memberController.createMember);
 router.on('POST', '/members/:id/update', memberController.updateMember);
 router.on('POST', '/members/:id/delete', memberController.deleteMember);
+
+router.on('GET', '/activities/:id', activityController.getById);
+router.on('GET', '/stats/activities', activityController.stats);
+router.on('POST', 'activities/:id', activityController.createe);
 module.exports = router;
